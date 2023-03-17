@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tipsy_trials/constants/app_colors.dart';
-import 'package:tipsy_trials/views/pages/03_start/start.dart';
+import 'package:tipsy_trials/views/pages/03_local_play/local_play.dart';
+import 'package:tipsy_trials/views/pages/04_multiplayer/multiplayer.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../themes/text.dart';
 import 'package:get/get.dart';
 import '../../../controllers/home_controller.dart';
+import '../../widgets/selection_button.dart';
+import '../../widgets/username_field.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -48,11 +51,19 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 10),
 
                     // Who's Drinking Username Input Field
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Enter your username...',
-                        border: OutlineInputBorder(),
-                      ),
+                    Column(
+                      children: [
+                        UsernameField(
+                            onChanged: (_) => homeController.validateForm()),
+                        Obx(() {
+                          return homeController.errorMessage.value.isEmpty
+                              ? SizedBox.shrink()
+                              : Text(
+                                  homeController.errorMessage.value,
+                                  style: TextStyle(color: Colors.red),
+                                );
+                        }),
+                      ],
                     ),
 
                     SizedBox(height: 20),
@@ -67,78 +78,43 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 15),
 
                     // Multiplayer button
-                    Obx(() {
-                      return ElevatedButton(
-                        onPressed: () {
-                          homeController.setSelectedMode('multiplayer');
-                        },
-                        child: Text(
-                          'Multiplayer',
-                          style: TextStyle(
-                              color: homeController.selectedMode.value ==
-                                      'multiplayer'
-                                  ? AppColors.primaryColor
-                                  : Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                          backgroundColor:
-                              homeController.selectedMode.value == 'multiplayer'
-                                  ? AppColors.accentColor
-                                  : AppColors.primaryColor,
-                          side: BorderSide(
-                            color: homeController.selectedMode.value ==
-                                    'multiplayer'
-                                ? AppColors.primaryColor
-                                : Colors.transparent,
-                          ),
-                        ),
-                      );
-                    }),
+                    SelectionButton(
+                      text: 'Multiplayer',
+                      onPressed: () =>
+                          homeController.setSelectedMode('multiplayer'),
+                      isSelected: homeController.isSelectedMultiplayer,
+                    ),
 
                     SizedBox(height: 15),
 
                     // Local Play button
-                    Obx(() {
-                      return ElevatedButton(
-                        onPressed: () {
-                          homeController.setSelectedMode('local');
-                        },
-                        child: Text(
-                          'Local Play',
-                          style: TextStyle(
-                              color: homeController.selectedMode.value ==
-                                      'local'
-                                  ? AppColors.primaryColor
-                                  : Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                          backgroundColor:
-                              homeController.selectedMode.value == 'local'
-                                  ? AppColors.accentColor
-                                  : AppColors.primaryColor,
-                          side: BorderSide(
-                            color: homeController.selectedMode.value == 'local'
-                                ? AppColors.primaryColor
-                                : Colors.transparent,
-                          ),
-                        ),
-                      );
-                    }),
+                    SelectionButton(
+                      text: 'Local Play',
+                      onPressed: () => homeController.setSelectedMode('local'),
+                      isSelected: homeController.isSelectedLocalPlay,
+                    ),
                   ],
                 ),
               ),
 
               // START button
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => StartScreen());
-                },
-                child: Text('START'),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50)),
-              ),
+              Obx(() {
+                return ElevatedButton(
+                  onPressed: homeController.canProceed.value
+                      ? () {
+                          if (homeController.selectedMode.value == 'local') {
+                            Get.to(() => LocalPlayScreen());
+                          } else if (homeController.selectedMode.value ==
+                              'multiplayer') {
+                            Get.to(() => MultiplayerScreen());
+                          }
+                        }
+                      : null,
+                  child: Text('START'),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50)),
+                );
+              }),
             ],
           ),
         ),
