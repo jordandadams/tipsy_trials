@@ -25,7 +25,6 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                // Wrap the whole Column with Expanded
                 child: Column(
                   children: [
                     SizedBox(height: 40),
@@ -103,10 +102,12 @@ class HomeScreen extends StatelessWidget {
                   onPressed: homeController.canProceed.value
                       ? () {
                           if (homeController.selectedMode.value == 'local') {
-                            Get.to(() => LocalPlayScreen());
+                            Get.to(() => LocalPlayScreen(
+                                username:
+                                    homeController.usernameController.text));
                           } else if (homeController.selectedMode.value ==
                               'multiplayer') {
-                            Get.to(() => MultiplayerScreen());
+                            Get.to(() => MultiplayerScreen()); // Update logic like above
                           }
                         }
                       : null,
