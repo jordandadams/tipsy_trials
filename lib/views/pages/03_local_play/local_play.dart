@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tipsy_trials/views/pages/05_game/game.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../themes/text.dart';
@@ -18,12 +19,19 @@ class LocalPlayScreen extends StatelessWidget {
     localPlayController.addUser(username);
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(AppSizes.defaultPadding),
           child: Column(
             children: [
-              SizedBox(height: 40),
 
               // Local Play Header Text
               Center(
@@ -131,7 +139,9 @@ class LocalPlayScreen extends StatelessWidget {
 
               // LET'S PLAY button
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => GameScreen());
+                },
                 child: Text("LET'S PLAY!"),
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50)),
