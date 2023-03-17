@@ -6,6 +6,8 @@ import '../../../constants/app_sizes.dart';
 import '../../themes/text.dart';
 import 'package:get/get.dart';
 import '../../../controllers/home_controller.dart';
+import '../../widgets/selection_button.dart';
+import '../../widgets/username_field.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,6 +16,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController homeController =
         Get.put(HomeController()); // Initialize the HomeController
+
+    // Set the initial border value
+    homeController.setUsernameInputBorder(
+      OutlineInputBorder(borderSide: homeController.defaultBorderSide()),
+    );
 
     return Scaffold(
       body: SafeArea(
@@ -48,12 +55,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 10),
 
                     // Who's Drinking Username Input Field
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Enter your username...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
+                    UsernameField(),
 
                     SizedBox(height: 20),
 
@@ -68,31 +70,12 @@ class HomeScreen extends StatelessWidget {
 
                     // Multiplayer button
                     Obx(() {
-                      return ElevatedButton(
-                        onPressed: () {
-                          homeController.setSelectedMode('multiplayer');
-                        },
-                        child: Text(
-                          'Multiplayer',
-                          style: TextStyle(
-                              color: homeController.selectedMode.value ==
-                                      'multiplayer'
-                                  ? AppColors.primaryColor
-                                  : Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                          backgroundColor:
-                              homeController.selectedMode.value == 'multiplayer'
-                                  ? AppColors.accentColor
-                                  : AppColors.primaryColor,
-                          side: BorderSide(
-                            color: homeController.selectedMode.value ==
-                                    'multiplayer'
-                                ? AppColors.primaryColor
-                                : Colors.transparent,
-                          ),
-                        ),
+                      return SelectionButton(
+                        text: 'Multiplayer',
+                        onPressed: () =>
+                            homeController.setSelectedMode('multiplayer'),
+                        isSelected:
+                            homeController.selectedMode.value == 'multiplayer',
                       );
                     }),
 
@@ -100,30 +83,12 @@ class HomeScreen extends StatelessWidget {
 
                     // Local Play button
                     Obx(() {
-                      return ElevatedButton(
-                        onPressed: () {
-                          homeController.setSelectedMode('local');
-                        },
-                        child: Text(
-                          'Local Play',
-                          style: TextStyle(
-                              color: homeController.selectedMode.value ==
-                                      'local'
-                                  ? AppColors.primaryColor
-                                  : Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                          backgroundColor:
-                              homeController.selectedMode.value == 'local'
-                                  ? AppColors.accentColor
-                                  : AppColors.primaryColor,
-                          side: BorderSide(
-                            color: homeController.selectedMode.value == 'local'
-                                ? AppColors.primaryColor
-                                : Colors.transparent,
-                          ),
-                        ),
+                      return SelectionButton(
+                        text: 'Local Play',
+                        onPressed: () =>
+                            homeController.setSelectedMode('local'),
+                        isSelected:
+                            homeController.selectedMode.value == 'local',
                       );
                     }),
                   ],
