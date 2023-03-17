@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tipsy_trials/constants/app_colors.dart';
-import 'package:tipsy_trials/views/pages/03_start/start.dart';
+import 'package:tipsy_trials/views/pages/03_local_play/local_play.dart';
+import 'package:tipsy_trials/views/pages/04_multiplayer/multiplayer.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../themes/text.dart';
@@ -16,11 +17,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController homeController =
         Get.put(HomeController()); // Initialize the HomeController
-
-    // Set the initial border value
-    homeController.setUsernameInputBorder(
-      OutlineInputBorder(borderSide: homeController.defaultBorderSide()),
-    );
 
     return Scaffold(
       body: SafeArea(
@@ -55,7 +51,20 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 10),
 
                     // Who's Drinking Username Input Field
-                    UsernameField(),
+                    Column(
+                      children: [
+                        UsernameField(
+                            onChanged: (_) => homeController.validateForm()),
+                        Obx(() {
+                          return homeController.errorMessage.value.isEmpty
+                              ? SizedBox.shrink()
+                              : Text(
+                                  homeController.errorMessage.value,
+                                  style: TextStyle(color: Colors.red),
+                                );
+                        }),
+                      ],
+                    ),
 
                     SizedBox(height: 20),
 
@@ -69,41 +78,43 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 15),
 
                     // Multiplayer button
-                    Obx(() {
-                      return SelectionButton(
-                        text: 'Multiplayer',
-                        onPressed: () =>
-                            homeController.setSelectedMode('multiplayer'),
-                        isSelected:
-                            homeController.selectedMode.value == 'multiplayer',
-                      );
-                    }),
+                    SelectionButton(
+                      text: 'Multiplayer',
+                      onPressed: () =>
+                          homeController.setSelectedMode('multiplayer'),
+                      isSelected: homeController.isSelectedMultiplayer,
+                    ),
 
                     SizedBox(height: 15),
 
                     // Local Play button
-                    Obx(() {
-                      return SelectionButton(
-                        text: 'Local Play',
-                        onPressed: () =>
-                            homeController.setSelectedMode('local'),
-                        isSelected:
-                            homeController.selectedMode.value == 'local',
-                      );
-                    }),
+                    SelectionButton(
+                      text: 'Local Play',
+                      onPressed: () => homeController.setSelectedMode('local'),
+                      isSelected: homeController.isSelectedLocalPlay,
+                    ),
                   ],
                 ),
               ),
 
               // START button
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => StartScreen());
-                },
-                child: Text('START'),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50)),
-              ),
+              Obx(() {
+                return ElevatedButton(
+                  onPressed: homeController.canProceed.value
+                      ? () {
+                          if (homeController.selectedMode.value == 'local') {
+                            Get.to(() => LocalPlayScreen());
+                          } else if (homeController.selectedMode.value ==
+                              'multiplayer') {
+                            Get.to(() => MultiplayerScreen());
+                          }
+                        }
+                      : null,
+                  child: Text('START'),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50)),
+                );
+              }),
             ],
           ),
         ),
