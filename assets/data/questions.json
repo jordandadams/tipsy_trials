@@ -1,0 +1,33 @@
+{
+    "vote_cards": [
+        {
+            "question": "Who is the most likely to become a millionaire?"
+        },
+        {
+            "question": "Who is the biggest flirt in the group?"
+        },
+        {
+            "question": "Who is the smartest person in the group?"
+        }
+    ],
+    "truth_or_dare_cards": [
+        {
+            "truth": [
+                {
+                    "question": "What is your biggest fear?"
+                },
+                {
+                    "question": "Who is the last person you had a crush on?"
+                }
+            ],
+            "dare": [
+                {
+                    "question": "Sing a song in front of everyone."
+                },
+                {
+                    "question": "Do 10 push-ups in front of everyone."
+                }
+            ]
+        }
+    ]
+}
