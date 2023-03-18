@@ -102,7 +102,9 @@ class LocalPlayController extends GetxController {
         username.length < 4 ||
         username.length > 15 ||
         username.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ||
-        usernames.contains(username)) {
+        usernames.contains(username) ||
+        usernames.length >= 12) {
+      // Check if the list already has 12 players
       return false;
     }
     return true;

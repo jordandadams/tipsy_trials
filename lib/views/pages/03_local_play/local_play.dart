@@ -6,6 +6,7 @@ import '../../themes/text.dart';
 import 'package:get/get.dart';
 import '../../../controllers/local_play_controller.dart';
 import '../../widgets/add_user_input_field.dart';
+import '../../widgets/bouncing_arrow.dart';
 
 class LocalPlayScreen extends StatelessWidget {
   final String username;
@@ -32,7 +33,6 @@ class LocalPlayScreen extends StatelessWidget {
           padding: EdgeInsets.all(AppSizes.defaultPadding),
           child: Column(
             children: [
-
               // Local Play Header Text
               Center(
                 child: Text(
@@ -51,19 +51,44 @@ class LocalPlayScreen extends StatelessWidget {
                 ),
               ),
 
+              // Add the hintText above the Container
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0, bottom: 8.0),
+                  child: Text(
+                    "2 players required & 12 max players!",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ),
+              ),
+
               // Container holding all usernames of people that are playing
               Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 150),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.grey[200], // Light grey color
                   borderRadius: BorderRadius.circular(10), // Rounded corners
                 ),
                 child: Obx(
-                  () => Column(
-                    children: localPlayController.usernames
-                        .map((user) => Text(user))
-                        .toList(),
+                  () => Container(
+                    width: 400, // Set the fixed width
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: localPlayController.usernames
+                          .map((user) => Center(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    user.length > 15
+                                        ? user.substring(0, 15)
+                                        : user,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ),
               ),
@@ -88,8 +113,7 @@ class LocalPlayScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .end, // Align the icons to the right
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               // Cancel button
                               IconButton(
@@ -142,11 +166,17 @@ class LocalPlayScreen extends StatelessWidget {
                 onPressed: () {
                   Get.to(() => GameScreen());
                 },
-                child: Text("LET'S PLAY!"),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("LET'S PLAY!"),
+                    SizedBox(width: 10), // Add space between text and icon
+                    BouncingArrow(),
+                  ],
+                ),
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50)),
               ),
-              SizedBox(height: 10),
             ],
           ),
         ),
