@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
 import '../../../controllers/questions_controller.dart';
 import 'package:get/get.dart';
 
@@ -36,9 +37,13 @@ class _GameScreenState extends State<GameScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
@@ -57,8 +62,7 @@ class _GameScreenState extends State<GameScreen>
               builder: (BuildContext context, Widget? child) {
                 return Transform(
                   alignment: FractionalOffset.center,
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001),
+                  transform: Matrix4.identity()..setEntry(3, 2, 0.001),
                   child: _controller.value < 0.5 ? _buildFront() : _buildBack(),
                 );
               },
@@ -66,6 +70,7 @@ class _GameScreenState extends State<GameScreen>
           ),
         ),
       ),
+      drawer: SideMenu(),
     );
   }
 
