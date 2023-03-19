@@ -18,34 +18,30 @@ class SideMenu extends StatelessWidget {
           children: [
             Column(
               children: [
-                DrawerHeader(
-                  child: Text('Menu'),
+                Container(
+                  padding: EdgeInsets.fromLTRB(16, 70, 16, 30),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Pause Menu',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                ListTile(
-                  title: Text('Players'),
-                  trailing: Icon(Icons.arrow_drop_down),
-                  onTap: () {
-                    Get.dialog(
-                      AlertDialog(
-                        content: Container(
-                          width: double.maxFinite,
-                          child: ListView.builder(
-                            itemCount: localPlayController.usernames.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text(localPlayController.usernames[index]),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                ExpansionTile(
+                  title: Text(
+                    'Players',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  children: List.generate(
+                    localPlayController.usernames.length,
+                    (index) => ListTile(
+                      title: Text(localPlayController.usernames[index]),
+                    ),
+                  ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
               child: ElevatedButton(
                 onPressed: () => Get.to(() => HomeScreen()),
                 child: Text('Quit Game'),
