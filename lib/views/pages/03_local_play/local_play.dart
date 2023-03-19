@@ -15,9 +15,7 @@ class LocalPlayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localPlayController = Get.put(LocalPlayController());
-    final TextEditingController _usernameController = TextEditingController();
-
-    localPlayController.addUser(username);
+    localPlayController.setInitialUsername(username);
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +55,7 @@ class LocalPlayScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 15.0, bottom: 8.0),
                   child: Text(
-                    "2 players required & 12 max players!",
+                    "2 players required & 8 max players!",
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ),
@@ -77,14 +75,29 @@ class LocalPlayScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: localPlayController.usernames
-                          .map((user) => Center(
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(
-                                    user.length > 15
-                                        ? user.substring(0, 15)
-                                        : user,
-                                  ),
+                          .map((user) => Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(
+                                        user.length > 15
+                                            ? user.substring(0, 15)
+                                            : user,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        localPlayController.usernames
+                                            .remove(user);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ))
                           .toList(),

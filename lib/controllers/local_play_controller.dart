@@ -40,6 +40,12 @@ class LocalPlayController extends GetxController {
     }
   }
 
+  void setInitialUsername(String username) {
+    if (usernames.isEmpty) {
+      addUser(username);
+    }
+  }
+
   void toggleInputField() {
     showInputField.value = !showInputField.value;
   }
@@ -103,8 +109,8 @@ class LocalPlayController extends GetxController {
         username.length > 15 ||
         username.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ||
         usernames.contains(username) ||
-        usernames.length >= 12) {
-      // Check if the list already has 12 players
+        usernames.length >= 8) {
+      // Check if the list already has 8 players
       return false;
     }
     return true;
