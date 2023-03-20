@@ -17,7 +17,8 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SwipeableCardSectionController _cardController = SwipeableCardSectionController();
+    SwipeableCardSectionController _cardController =
+        SwipeableCardSectionController();
 
     return Scaffold(
       appBar: AppBar(
@@ -45,12 +46,14 @@ class _GameScreenState extends State<GameScreen> {
                     cardController: _cardController,
                     context: context,
                     items: List.generate(3, (index) {
-                      Map<String, dynamic> question = _questionController.getRandomQuestion();
+                      Map<String, dynamic> question =
+                          _questionController.getRandomQuestion();
                       return _buildQuestionCard(question);
                     }),
                     onCardSwiped: (dir, index, widget) {
                       _cardController.addItem(
-                        _buildQuestionCard(_questionController.getRandomQuestion()),
+                        _buildQuestionCard(
+                            _questionController.getRandomQuestion()),
                       );
                     },
                     enableSwipeUp: true,
@@ -74,14 +77,18 @@ class _GameScreenState extends State<GameScreen> {
       width: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.blue,
+        color: Color.fromARGB(255, 237, 229, 213),
+        border: Border.all(
+          color: Color.fromARGB(255, 7, 79, 81),
+          width: 2,
+        ),
       ),
       child: Center(
         child: Text(
           question["question"] ?? '',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white,
+            color: Color.fromARGB(255, 7, 79, 81),
             fontSize: 18,
           ),
         ),
