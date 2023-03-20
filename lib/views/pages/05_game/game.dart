@@ -4,6 +4,7 @@ import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
 import '../../../controllers/questions_controller.dart';
 import 'package:get/get.dart';
+import '../../../controllers/local_play_controller.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   final QuestionController _questionController = Get.put(QuestionController());
+  final localPlayController = Get.find<LocalPlayController>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +59,10 @@ class _GameScreenState extends State<GameScreen> {
                         );
                       },
                     ),
-                    // Add your buttons here
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Button 1'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Button 2'),
+                    Wrap(
+                      direction: Axis.horizontal,
+                      alignment: WrapAlignment.center,
+                      children: _buildPlayerButtons(),
                     ),
                   ],
                 ),
@@ -77,6 +75,26 @@ class _GameScreenState extends State<GameScreen> {
       ),
       drawer: SideMenu(),
     );
+  }
+
+  List<Widget> _buildPlayerButtons() {
+    return List<Widget>.generate(localPlayController.usernames.length, (index) {
+      String player = localPlayController.usernames[index];
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+        child: ElevatedButton(
+          onPressed: () {},
+          child: Text(player),
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildQuestionCard(Map<String, dynamic> question) {
