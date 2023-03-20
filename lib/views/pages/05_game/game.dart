@@ -91,15 +91,37 @@ class _GameScreenState extends State<GameScreen> {
             width: 2,
           ),
         ),
-        child: Center(
-          child: Text(
-            question["question"] ?? '',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color.fromARGB(255, 7, 79, 81),
-              fontSize: 18,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+              child: Text(
+                question["type"],
+                style: TextStyle(
+                  color: Color.fromARGB(255, 7, 79, 81),
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
+            Divider(color: Color.fromARGB(255, 7, 79, 81)),
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 30),
+                  child: Text(
+                    question["question"] ?? '',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 7, 79, 81),
+                      fontSize: 26,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

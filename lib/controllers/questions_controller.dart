@@ -17,9 +17,26 @@ class QuestionController extends GetxController {
     String jsonString =
         await rootBundle.loadString('assets/data/questions.json');
     final Map<String, dynamic> parsedData = jsonDecode(jsonString);
-    _questions = parsedData["vote_cards"] +
-        parsedData["truth_or_dare_cards"][0]["truth"] +
-        parsedData["truth_or_dare_cards"][0]["dare"];
+
+    _questions = parsedData["vote_cards"].map((question) {
+      return {
+        "type": "Vote",
+        "question": question["question"],
+      };
+    }).toList() +
+        parsedData["truth_or_dare_cards"][0]["truth"].map((question) {
+          return {
+            "type": "Truth",
+            "question": question["question"],
+          };
+        }).toList() +
+        parsedData["truth_or_dare_cards"][0]["dare"].map((question) {
+          return {
+            "type": "Dare",
+            "question": question["question"],
+          };
+        }).toList();
+
     update();
   }
 
