@@ -1,6 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
 import '../../../controllers/questions_controller.dart';
 import 'package:get/get.dart';
@@ -12,29 +12,13 @@ class GameScreen extends StatefulWidget {
   _GameScreenState createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  bool _isFront = true;
+class _GameScreenState extends State<GameScreen> {
   final QuestionController _questionController = Get.put(QuestionController());
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    SwipeableCardSectionController _cardController = SwipeableCardSectionController();
+
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -49,45 +33,42 @@ class _GameScreenState extends State<GameScreen>
         elevation: 0,
       ),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            _controller.forward();
-            setState(() {
-              _isFront = !_isFront;
-            });
+        child: FutureBuilder(
+          future: _questionController.loadQuestions(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16),
+                  SwipeableCardsSection(
+                    cardController: _cardController,
+                    context: context,
+                    items: List.generate(3, (index) {
+                      Map<String, dynamic> question = _questionController.getRandomQuestion();
+                      return _buildQuestionCard(question);
+                    }),
+                    onCardSwiped: (dir, index, widget) {
+                      _cardController.addItem(
+                        _buildQuestionCard(_questionController.getRandomQuestion()),
+                      );
+                    },
+                    enableSwipeUp: true,
+                    enableSwipeDown: false,
+                  ),
+                ],
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
           },
-          child: Center(
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (BuildContext context, Widget? child) {
-                return Transform(
-                  alignment: FractionalOffset.center,
-                  transform: Matrix4.identity()..setEntry(3, 2, 0.001),
-                  child: _controller.value < 0.5 ? _buildFront() : _buildBack(),
-                );
-              },
-            ),
-          ),
         ),
       ),
       drawer: SideMenu(),
     );
   }
 
-  Widget _buildFront() {
-    return Container(
-      height: 300,
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.red,
-      ),
-      child: Center(child: Text('Tap to flip')),
-    );
-  }
-
-  Widget _buildBack() {
-    Map<String, dynamic> question = _questionController.getRandomQuestion();
+  Widget _buildQuestionCard(Map<String, dynamic> question) {
     return Container(
       height: 300,
       width: 200,

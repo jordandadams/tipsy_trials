@@ -14,6 +14,7 @@ dependencies:
   get:
   google_fonts: ^4.0.3
   cupertino_icons: ^1.0.2
+  swipeable_card_stack: ^0.0.5
 
 dev_dependencies:
   flutter_test:
