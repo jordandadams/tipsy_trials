@@ -38,28 +38,36 @@ class _GameScreenState extends State<GameScreen> {
           future: _questionController.loadQuestions(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16),
-                  SwipeableCardsSection(
-                    cardController: _cardController,
-                    context: context,
-                    items: List.generate(3, (index) {
-                      Map<String, dynamic> question =
-                          _questionController.getRandomQuestion();
-                      return _buildQuestionCard(question);
-                    }),
-                    onCardSwiped: (dir, index, widget) {
-                      _cardController.addItem(
-                        _buildQuestionCard(
-                            _questionController.getRandomQuestion()),
-                      );
-                    },
-                    enableSwipeUp: true,
-                    enableSwipeDown: false,
-                  ),
-                ],
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: Column(
+                  children: [
+                    SwipeableCardsSection(
+                      cardController: _cardController,
+                      context: context,
+                      items: List.generate(3, (index) {
+                        Map<String, dynamic> question =
+                            _questionController.getRandomQuestion();
+                        return _buildQuestionCard(question);
+                      }),
+                      onCardSwiped: (dir, index, widget) {
+                        _cardController.addItem(
+                          _buildQuestionCard(
+                              _questionController.getRandomQuestion()),
+                        );
+                      },
+                    ),
+                    // Add your buttons here
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Button 1'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Button 2'),
+                    ),
+                  ],
+                ),
               );
             } else {
               return Center(child: CircularProgressIndicator());
@@ -72,24 +80,25 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Widget _buildQuestionCard(Map<String, dynamic> question) {
-    return Container(
-      height: 300,
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Color.fromARGB(255, 237, 229, 213),
-        border: Border.all(
-          color: Color.fromARGB(255, 7, 79, 81),
-          width: 2,
-        ),
-      ),
-      child: Center(
-        child: Text(
-          question["question"] ?? '',
-          textAlign: TextAlign.center,
-          style: TextStyle(
+    return Transform.scale(
+      scale: 0.75,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Color.fromARGB(255, 237, 229, 213),
+          border: Border.all(
             color: Color.fromARGB(255, 7, 79, 81),
-            fontSize: 18,
+            width: 2,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            question["question"] ?? '',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color.fromARGB(255, 7, 79, 81),
+              fontSize: 18,
+            ),
           ),
         ),
       ),
