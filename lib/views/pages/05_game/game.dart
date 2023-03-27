@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
+import 'package:tipsy_trials/constants/app_colors.dart';
 import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
 import '../../../controllers/current_questions_controller.dart';
 import '../../../controllers/questions_controller.dart';
@@ -104,15 +105,32 @@ class _GameScreenState extends State<GameScreen> {
           onPressed: () {
             Get.dialog(
               AlertDialog(
-                content: Obx(() => Text(cardQuestions[
-                        _visibleCardIndexController.currentVisibleCardIndex]
-                    ["question"])),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(() => Text(cardQuestions[_visibleCardIndexController
+                        .currentVisibleCardIndex]["question"])),
+                    SizedBox(height: 25),
+                    Text(
+                      'Player voted: $player',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
                 actions: [
-                  ElevatedButton(
-                    child: Text('Close'),
+                  TextButton(
+                    child: Text('Next Question'),
                     onPressed: () {
                       Get.back();
                     },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
