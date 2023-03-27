@@ -2,9 +2,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
+import '../../../controllers/current_questions_controller.dart';
 import '../../../controllers/questions_controller.dart';
 import 'package:get/get.dart';
 import '../../../controllers/local_play_controller.dart';
+import '../../../controllers/visible_card_controller.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -15,7 +17,18 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   final QuestionController _questionController = Get.put(QuestionController());
+  final CurrentQuestionsController _currentQuestionsController =
+      Get.put(CurrentQuestionsController());
+  final VisibleCardIndexController _visibleCardIndexController =
+      Get.put(VisibleCardIndexController());
+
   final localPlayController = Get.find<LocalPlayController>();
+  List<String> currentQuestions = List.filled(3, '');
+  List<Map<String, dynamic>> cardQuestions = [];
+  int _currentVisibleCardIndex = 0;
+
+  SwipeableCardSectionController _cardController =
+      SwipeableCardSectionController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +63,18 @@ class _GameScreenState extends State<GameScreen> {
                       items: List.generate(3, (index) {
                         Map<String, dynamic> question =
                             _questionController.getRandomQuestion();
+                        cardQuestions.add(question);
                         return _buildQuestionCard(question);
                       }),
                       onCardSwiped: (dir, index, widget) {
+                        Map<String, dynamic> newQuestion =
+                            _questionController.getRandomQuestion();
                         _cardController.addItem(
-                          _buildQuestionCard(
-                              _questionController.getRandomQuestion()),
+                          _buildQuestionCard(newQuestion),
                         );
+                        cardQuestions[index % 3] = newQuestion;
+                        _visibleCardIndexController
+                            .updateVisibleCardIndex((index + 1) % 3);
                       },
                     ),
                     Wrap(
@@ -83,7 +101,23 @@ class _GameScreenState extends State<GameScreen> {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.dialog(
+              AlertDialog(
+                content: Obx(() => Text(cardQuestions[
+                        _visibleCardIndexController.currentVisibleCardIndex]
+                    ["question"])),
+                actions: [
+                  ElevatedButton(
+                    child: Text('Close'),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
           child: Text(player),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
