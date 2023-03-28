@@ -88,6 +88,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tindercard:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "1a29a38557422d37fafa0d1b90c7da86e99fbb12"
+      url: "https://github.com/ShaunRain/flutter_tindercard.git"
+    source: git
+    version: "0.2.0"
   get:
     dependency: "direct main"
     description:
@@ -247,13 +256,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  swipeable_card_stack:
-    dependency: "direct main"
-    description:
-      name: swipeable_card_stack
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5"
   term_glyph:
     dependency: transitive
     description:

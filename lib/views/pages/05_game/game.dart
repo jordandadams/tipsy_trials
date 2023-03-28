@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:tipsy_trials/constants/app_colors.dart';
 import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
 import '../../../controllers/current_questions_controller.dart';
@@ -8,6 +7,8 @@ import '../../../controllers/questions_controller.dart';
 import 'package:get/get.dart';
 import '../../../controllers/local_play_controller.dart';
 import '../../../controllers/visible_card_controller.dart';
+
+import 'package:flutter_tindercard/flutter_tindercard.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -27,15 +28,18 @@ class _GameScreenState extends State<GameScreen> {
   List<String> currentQuestions = List.filled(3, '');
   List<Map<String, dynamic>> cardQuestions = [];
   int _currentVisibleCardIndex = 0;
+  Map<String, dynamic>? _nextQuestion;
 
-  SwipeableCardSectionController _cardController =
-      SwipeableCardSectionController();
+  CardController _cardController = CardController();
+
+  @override
+  void initState() {
+    super.initState();
+    _questionController.loadInitialQuestions();
+  }
 
   @override
   Widget build(BuildContext context) {
-    SwipeableCardSectionController _cardController =
-        SwipeableCardSectionController();
-
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -50,66 +54,79 @@ class _GameScreenState extends State<GameScreen> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: FutureBuilder(
-          future: _questionController.loadQuestions(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Container(
-                height: MediaQuery.of(context).size.height * 0.75,
-                child: Column(
-                  children: [
-                    SwipeableCardsSection(
-                      cardController: _cardController,
-                      context: context,
-                      items: List.generate(3, (index) {
-                        Map<String, dynamic> question =
-                            _questionController.getRandomQuestion();
-                        cardQuestions.add(question);
-                        return _buildQuestionCard(question);
-                      }),
-                      onCardSwiped: (dir, index, widget) {
-                        Map<String, dynamic> newQuestion =
-                            _questionController.getRandomQuestion();
-                        _cardController.addItem(
-                          _buildQuestionCard(newQuestion),
-                        );
-                        cardQuestions[index % 3] = newQuestion;
-                        _visibleCardIndexController
-                            .updateVisibleCardIndex((index + 1) % 3);
-                      },
-                    ),
-                    Wrap(
-                      direction: Axis.horizontal,
-                      alignment: WrapAlignment.center,
-                      children: _buildPlayerButtons(),
-                    ),
-                  ],
+        child: Obx(
+          () => _questionController.cardQuestions.isEmpty
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: TinderSwapCard(
+                          orientation: AmassOrientation.bottom,
+                          totalNum: _questionController.cardQuestions
+                              .length, // Use the total number of questions
+                          stackNum: 300,
+                          maxWidth: MediaQuery.of(context).size.width * 0.9,
+                          maxHeight: MediaQuery.of(context).size.width * 0.9,
+                          minWidth: MediaQuery.of(context).size.width * 0.8,
+                          minHeight: MediaQuery.of(context).size.width * 0.8,
+                          cardBuilder: (context, index) {
+                            // Use the index directly
+                            final question =
+                                _questionController.cardQuestions[index];
+                            return _buildQuestionCard(question);
+                          },
+                          cardController: _cardController,
+                          swipeUpdateCallback:
+                              (DragUpdateDetails details, Alignment align) {},
+                          swipeCompleteCallback:
+                              (CardSwipeOrientation orientation, int index) {
+                            _questionController.cardQuestions[index] =
+                                _questionController.nextQuestion!;
+                            _questionController.nextQuestion =
+                                _questionController.getRandomQuestion();
+                            // Update the current visible card index
+                            _currentVisibleCardIndex = (index + 1) %
+                                _questionController.cardQuestions.length;
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          alignment: WrapAlignment.center,
+                          // Pass the question from the currently visible card
+                          children: _buildPlayerButtons(_questionController
+                              .cardQuestions[_currentVisibleCardIndex]),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
         ),
       ),
       drawer: SideMenu(),
     );
   }
 
-  List<Widget> _buildPlayerButtons() {
+  List<Widget> _buildPlayerButtons(Map<String, dynamic> question) {
     return List<Widget>.generate(localPlayController.usernames.length, (index) {
       String player = localPlayController.usernames[index];
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
         child: ElevatedButton(
           onPressed: () {
+            // Store the question of the currently visible card
+            final currentQuestion = question;
             Get.dialog(
               AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Obx(() => Text(cardQuestions[_visibleCardIndexController
-                        .currentVisibleCardIndex]["question"])),
+                    Text(currentQuestion["question"]), // Use stored question
                     SizedBox(height: 25),
                     Text(
                       'Player voted: $player',
@@ -122,6 +139,7 @@ class _GameScreenState extends State<GameScreen> {
                     child: Text('Next Question'),
                     onPressed: () {
                       Get.back();
+                      _cardController.triggerRight();
                     },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all(EdgeInsets.zero),
