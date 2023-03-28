@@ -1,0 +1,159 @@
+{
+    "vote_cards": [
+        {
+            "question": "Who is the most likely to become a millionaire?"
+        },
+        {
+            "question": "Who is the biggest flirt in the group?"
+        },
+        {
+            "question": "Who is the smartest person in the group?"
+        },
+        {
+            "question": "Who is the most likely to become a famous actor/actress?"
+        },
+        {
+            "question": "Who is the most likely to become a world leader?"
+        },
+        {
+            "question": "Who is the most likely to go bungee jumping?"
+        },
+        {
+            "question": "Who is the most likely to skydive?"
+        },
+        {
+            "question": "Who is the most likely to climb a mountain?"
+        },
+        {
+            "question": "Who is the most likely to travel the world?"
+        },
+        {
+            "question": "Who is the most likely to become a famous musician?"
+        },
+        {
+            "question": "Who is the most likely to start their own business?"
+        },
+        {
+            "question": "Who is the most likely to become a professional athlete?"
+        },
+        {
+            "question": "Who is the most likely to become a famous writer?"
+        },
+        {
+            "question": "Who is the most likely to win a Nobel Prize?"
+        },
+        {
+            "question": "Who is the most likely to become a famous scientist?"
+        },
+        {
+            "question": "Who is the most likely to become a famous chef?"
+        },
+        {
+            "question": "Who is the most likely to become a famous fashion designer?"
+        },
+        {
+            "question": "Who is the most likely to become a famous artist?"
+        },
+        {
+            "question": "Who is the most likely to live in a foreign country?"
+        },
+        {
+            "question": "Who is the most likely to become a successful entrepreneur?"
+        },
+        {
+            "question": "Who is the most likely to become a professional gamer?"
+        },
+        {
+            "question": "Who is the most likely to become a famous comedian?"
+        },
+        {
+            "question": "Who is the most likely to become a famous actor?"
+        },
+        {
+            "question": "Who is the most likely to become a famous director?"
+        }
+    ],
+    "truth_or_dare_cards": [
+        {
+            "truth": [
+                {
+                    "question": "What is your biggest fear?"
+                },
+                {
+                    "question": "Who is the last person you had a crush on?"
+                },
+                {
+                    "question": "What is the craziest thing you've ever done?"
+                },
+                {
+                    "question": "What is your biggest regret?"
+                },
+                {
+                    "question": "What is the most embarrassing thing that's ever happened to you?"
+                },
+                {
+                    "question": "Have you ever stolen anything?"
+                },
+                {
+                    "question": "Have you ever cheated on a test or exam?"
+                },
+                {
+                    "question": "What is something you've never told anyone before?"
+                },
+                {
+                    "question": "What is the worst date you've ever been on?"
+                },
+                {
+                    "question": "What is the most trouble you've ever gotten into with your parents?"
+                },
+                {
+                    "question": "What is the most annoying habit you have?"
+                },
+                {
+                    "question": "What is the most embarrassing thing in your room right now?"
+                },
+                {
+                    "question": "What is something you've always wanted to try but have been too afraid to do?"
+                },
+                {
+                    "question": "Have you ever lied to get out of trouble?"
+                },
+                {
+                    "question": "What is the most ridiculous thing you've ever bought?"
+                }
+            ],
+            "dare": [
+                {
+                    "question": "Go outside and do 10 jumping jacks."
+                },
+                {
+                    "question": "Text your crush and tell them you like them."
+                },
+                {
+                    "question": "Call your parents and sing them a song."
+                },
+                {
+                    "question": "Do a dance in front of everyone."
+                },
+                {
+                    "question": "Eat a spoonful of mustard."
+                },
+                {
+                    "question": "Wear your clothes backwards for the rest of the game."
+                },
+                {
+                    "question": "Take a selfie with someone's shoe on your head."
+                },
+                {
+                    "question": "Do 10 push-ups in front of everyone."
+                },
+                {
+                    "question": "Speak in a British accent for the rest of the game."
+                },
+                {
+                    "question": "Do a handstand against the wall."
+                }
+            ]
+        }
+    ]
+}
