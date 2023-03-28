@@ -107,7 +107,9 @@ class HomeScreen extends StatelessWidget {
                                     homeController.usernameController.text));
                           } else if (homeController.selectedMode.value ==
                               'multiplayer') {
-                            Get.to(() => MultiplayerScreen()); // Update logic like above
+                            Get.to(() => MultiplayerScreen(
+                                username: homeController.usernameController
+                                    .text));
                           }
                         }
                       : null,
