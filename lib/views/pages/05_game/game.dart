@@ -66,11 +66,16 @@ class _GameScreenState extends State<GameScreen> {
                           orientation: AmassOrientation.bottom,
                           totalNum: _questionController.cardQuestions
                               .length, // Use the total number of questions
-                          stackNum: 300,
-                          maxWidth: MediaQuery.of(context).size.width * 0.9,
-                          maxHeight: MediaQuery.of(context).size.width * 0.9,
-                          minWidth: MediaQuery.of(context).size.width * 0.8,
-                          minHeight: MediaQuery.of(context).size.width * 0.8,
+                          stackNum:
+                              300, // Number of cards in the stack (including the top card)
+                          maxWidth: MediaQuery.of(context).size.width *
+                              0.9, // Width of the top card
+                          maxHeight: MediaQuery.of(context).size.width *
+                              1.2, // Height of the top card
+                          minWidth: MediaQuery.of(context).size.width *
+                              0.85, // Width of the bottom card
+                          minHeight: MediaQuery.of(context).size.width *
+                              1.15, // Height of the bottom card
                           cardBuilder: (context, index) {
                             // Use the index directly
                             final question =
