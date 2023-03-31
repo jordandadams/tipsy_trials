@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
+import '../../../controllers/home_controller.dart';
+import '../../../controllers/local_play_controller.dart';
 import '../../../controllers/multiplayer_controller.dart';
 import '../../themes/text.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/bouncing_arrow.dart';
+import '../02_home/home.dart';
 import '../05_game/game.dart';
 
 class MultiplayerScreen extends StatelessWidget {
@@ -28,7 +31,10 @@ class MultiplayerScreen extends StatelessWidget {
             // Delete the lobby before navigating back
             await multiplayerController.deleteLobby(lobbyCode);
             // Navigate back
-            Navigator.pop(context);
+
+            Get.delete<LocalPlayController>();
+            Get.delete<HomeController>();
+            Get.to(() => HomeScreen());
           },
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

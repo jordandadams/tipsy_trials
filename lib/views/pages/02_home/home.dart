@@ -136,34 +136,56 @@ class HomeScreen extends StatelessWidget {
   }
 
   void showMultiplayerOptions(BuildContext context, String username) {
+    final HomeController homeController =
+        Get.find(); // Get the HomeController instance
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Multiplayer Options'),
-          content: Text('Choose an option to proceed.'),
+          title: Text('Select an option!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min, // Keep column height to minimum
+            children: [
+              // Host button styled like on the home page
+              Obx(() => SelectionButton(
+                    text: 'Host',
+                    onPressed: () {
+                      // User selected "Host"
+                      homeController.setSelectedMode('host');
+                      final multiplayerController =
+                          Get.put(MultiplayerController());
+                      multiplayerController.createLobby(username).then((_) {
+                        Get.to(() => MultiplayerScreen(
+                              username: username,
+                              lobbyCode: multiplayerController.lobbyCode!,
+                            ));
+                      });
+                      Navigator.pop(context); // Close the dialog
+                    },
+                    isSelected: homeController.isSelectedHost.value,
+                  )),
+              SizedBox(height: 15), // Space between the buttons
+              // Join button styled like on the home page
+              Obx(() => SelectionButton(
+                    text: 'Join',
+                    onPressed: () {
+                      // User selected "Join"
+                      homeController.setSelectedMode('join');
+                      // Navigate to the Join Screen (replace 'JoinScreen' with the actual class name)
+                      Get.to(() => JoinScreen(username: username));
+                    },
+                    isSelected: homeController.isSelectedJoin.value,
+                  )),
+            ],
+          ),
           actions: [
+            // Dismiss text in the bottom right
             TextButton(
               onPressed: () {
-                // User selected "Host"
-                final multiplayerController = Get.put(MultiplayerController());
-                multiplayerController.createLobby(username).then((_) {
-                  Get.to(() => MultiplayerScreen(
-                        username: username,
-                        lobbyCode: multiplayerController.lobbyCode!,
-                      ));
-                });
-                Navigator.pop(context);
+                Navigator.pop(context); // Close the dialog
               },
-              child: Text('Host'),
-            ),
-            TextButton(
-              onPressed: () {
-                // User selected "Join"
-                // Navigate to the Join Screen (replace 'JoinScreen' with the actual class name)
-                Get.to(() => JoinScreen(username: username));
-              },
-              child: Text('Join'),
+              child: Text('Dismiss'),
             ),
           ],
         );

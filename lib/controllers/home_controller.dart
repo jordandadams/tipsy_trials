@@ -22,6 +22,8 @@ class HomeController extends GetxController {
 
   final isSelectedMultiplayer = false.obs;
   final isSelectedLocalPlay = false.obs;
+  final isSelectedHost = false.obs;
+  final isSelectedJoin = false.obs;
 
   final canProceed = false.obs; // Add the new observable variable
 
@@ -36,6 +38,8 @@ class HomeController extends GetxController {
     usernameController.removeListener(validateForm);
     isSelectedMultiplayer.close();
     isSelectedLocalPlay.close();
+    isSelectedHost.close();
+    isSelectedJoin.close();
     super.onClose();
   }
 
@@ -47,6 +51,12 @@ class HomeController extends GetxController {
     } else if (mode == 'local') {
       isSelectedMultiplayer.value = false;
       isSelectedLocalPlay.value = true;
+    } else if (mode == 'host') {
+      isSelectedHost.value = true;
+      isSelectedJoin.value = false;
+    } else if (mode == 'join') {
+      isSelectedHost.value = false;
+      isSelectedJoin.value = true;
     }
     selectedMode.value = _mode;
     validateForm(); // Update the canProceed value
