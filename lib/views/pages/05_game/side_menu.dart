@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tipsy_trials/controllers/multiplayer_controller.dart';
 import 'package:tipsy_trials/views/pages/02_home/home.dart';
+import '../../../controllers/home_controller.dart';
 import '../../../controllers/local_play_controller.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({Key? key}) : super(key: key);
+  final bool isMultiplayer;
+  final String? lobbyCode;
+  final String? playerName;
+  const SideMenu(
+      {Key? key,
+      required this.isMultiplayer,
+      this.lobbyCode = '',
+      this.playerName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final localPlayController = Get.find<LocalPlayController>();
+    final homeController = Get.find<HomeController>();
+    final multiplayerController = Get.find<MultiplayerController>();
+
+    if (isMultiplayer && lobbyCode!.isNotEmpty) {
+      multiplayerController.listenToPlayersInLobby(lobbyCode);
+    }
 
     return Container(
       width: 200,
@@ -31,19 +47,44 @@ class SideMenu extends StatelessWidget {
                     'Players',
                     style: TextStyle(fontSize: 18),
                   ),
-                  children: List.generate(
-                    localPlayController.usernames.length,
-                    (index) => ListTile(
-                      title: Text(localPlayController.usernames[index]),
-                    ),
-                  ),
+                  children: isMultiplayer
+                      ? List.generate(
+                          multiplayerController.usernames.length,
+                          (index) => ListTile(
+                            title: Text(multiplayerController.usernames[index]),
+                          ),
+                        )
+                      : List.generate(
+                          localPlayController.usernames.length,
+                          (index) => ListTile(
+                            title: Text(localPlayController.usernames[index]),
+                          ),
+                        ),
                 ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
               child: ElevatedButton(
-                onPressed: () => Get.to(() => HomeScreen()),
+                onPressed: () async {
+                  if (isMultiplayer) {
+                    // Remove player from the lobby
+                    await multiplayerController.removePlayerFromLobby(
+                        lobbyCode!, playerName!);
+                    // Check the number of players remaining in the lobby
+                    int remainingPlayers =
+                        multiplayerController.usernames.length;
+                    // If less than 2 players, delete the lobby
+                    if (remainingPlayers < 2) {
+                      await multiplayerController.deleteLobby(lobbyCode!);
+                    }
+                  }
+                  // Reset GetX state for the player
+                  localPlayController.resetState();
+                  Get.delete<LocalPlayController>();
+                  Get.delete<HomeController>();
+                  Get.to(() => HomeScreen());
+                },
                 child: Text('Quit Game'),
               ),
             ),

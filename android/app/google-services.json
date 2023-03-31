@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "624492343010",
+    "project_id": "tipsy-trials",
+    "storage_bucket": "tipsy-trials.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624492343010:android:71c86b31d8b736da95f8bb",
+        "android_client_info": {
+          "package_name": "com.example.tipsy_trials"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624492343010-fh7u9amc6e0r55hmu42dlk5mtt1elddb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADK64bVn1N0hpQ8dTwIEAka4BvgatQzLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624492343010-fh7u9amc6e0r55hmu42dlk5mtt1elddb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "624492343010-or3ggr86un3uh45ous49pqj0rcnl6ld9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tipsytrials"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

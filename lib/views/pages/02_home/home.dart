@@ -4,6 +4,7 @@ import 'package:tipsy_trials/views/pages/03_local_play/local_play.dart';
 import 'package:tipsy_trials/views/pages/04_multiplayer/multiplayer.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
+import '../../../controllers/multiplayer_controller.dart';
 import '../../themes/text.dart';
 import 'package:get/get.dart';
 import '../../../controllers/home_controller.dart';
@@ -76,22 +77,31 @@ class HomeScreen extends StatelessWidget {
 
                     SizedBox(height: 15),
 
-                    // Multiplayer button
-                    SelectionButton(
-                      text: 'Multiplayer',
-                      onPressed: () =>
-                          homeController.setSelectedMode('multiplayer'),
-                      isSelected: homeController.isSelectedMultiplayer,
-                    ),
+                    GetBuilder<HomeController>(builder: (homeController) {
+                      return Column(
+                        children: [
+                          // Multiplayer button
+                          SelectionButton(
+                            text: 'Multiplayer',
+                            onPressed: () =>
+                                homeController.setSelectedMode('multiplayer'),
+                            isSelected: homeController.isSelectedMultiplayer
+                                .value, // Pass the value directly
+                          ),
 
-                    SizedBox(height: 15),
+                          SizedBox(height: 15),
 
-                    // Local Play button
-                    SelectionButton(
-                      text: 'Local Play',
-                      onPressed: () => homeController.setSelectedMode('local'),
-                      isSelected: homeController.isSelectedLocalPlay,
-                    ),
+                          // Local Play button
+                          SelectionButton(
+                            text: 'Local Play',
+                            onPressed: () =>
+                                homeController.setSelectedMode('local'),
+                            isSelected: homeController.isSelectedLocalPlay
+                                .value, // Pass the value directly
+                          ),
+                        ],
+                      );
+                    })
                   ],
                 ),
               ),
@@ -100,14 +110,22 @@ class HomeScreen extends StatelessWidget {
               Obx(() {
                 return ElevatedButton(
                   onPressed: homeController.canProceed.value
-                      ? () {
+                      ? () async {
                           if (homeController.selectedMode.value == 'local') {
                             Get.to(() => LocalPlayScreen(
                                 username:
                                     homeController.usernameController.text));
                           } else if (homeController.selectedMode.value ==
                               'multiplayer') {
-                            Get.to(() => MultiplayerScreen()); // Update logic like above
+                            final multiplayerController =
+                                Get.put(MultiplayerController());
+                            final username =
+                                homeController.usernameController.text;
+                            await multiplayerController.createLobby(username);
+                            Get.to(() => MultiplayerScreen(
+                                  username: username,
+                                  lobbyCode: multiplayerController.lobbyCode!,
+                                ));
                           }
                         }
                       : null,

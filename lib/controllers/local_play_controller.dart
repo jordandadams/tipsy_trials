@@ -115,4 +115,9 @@ class LocalPlayController extends GetxController {
     }
     return true;
   }
+
+  void resetState() {
+    // Reset the state of the controller
+    usernames.clear();
+  }
 }

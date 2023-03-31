@@ -48,8 +48,9 @@ class HomeController extends GetxController {
       isSelectedMultiplayer.value = false;
       isSelectedLocalPlay.value = true;
     }
-    selectedMode.value = _mode; // Add this line to update the observable
+    selectedMode.value = _mode;
     validateForm(); // Update the canProceed value
+    update();
   }
 
   BorderSide focusedBorderSide() {
