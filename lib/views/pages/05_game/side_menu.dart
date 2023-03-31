@@ -81,6 +81,7 @@ class SideMenu extends StatelessWidget {
                   }
                   // Reset GetX state for the player
                   localPlayController.resetState();
+                  Get.delete<LocalPlayController>();
                   Get.delete<HomeController>();
                   Get.to(() => HomeScreen());
                 },

@@ -19,6 +19,7 @@ dependencies:
     git:
       url: https://github.com/ShaunRain/flutter_tindercard.git
   firebase_database: ^10.0.9
+  shared_preferences: ^2.0.20
 
 dev_dependencies:
   flutter_test:

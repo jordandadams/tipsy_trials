@@ -76,8 +76,7 @@ class LocalPlayScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: localPlayController.usernames
                           .map((user) => Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -138,6 +137,7 @@ class LocalPlayScreen extends StatelessWidget {
                                 icon: Icon(Icons.cancel),
                               ),
                               SizedBox(width: 5),
+                              // Use Obx to listen to canProceed value
                               Obx(() {
                                 return IconButton(
                                   onPressed:
