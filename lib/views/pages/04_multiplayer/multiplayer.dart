@@ -5,6 +5,9 @@ import '../../../controllers/multiplayer_controller.dart';
 import '../../themes/text.dart';
 import 'package:get/get.dart';
 
+import '../../widgets/bouncing_arrow.dart';
+import '../05_game/game.dart';
+
 class MultiplayerScreen extends StatelessWidget {
   final String username;
   const MultiplayerScreen({Key? key, required this.username}) : super(key: key);
@@ -102,6 +105,28 @@ class MultiplayerScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
+              // Spacer to push the button to the bottom
+              Spacer(),
+
+              // LET'S PLAY button
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => GameScreen());
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("LET'S PLAY!"),
+                    SizedBox(width: 10), // Add space between text and icon
+                    BouncingArrow(),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 50)),
+              ),
+
+              
             ],
           ),
         ),
