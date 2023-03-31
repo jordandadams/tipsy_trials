@@ -10,7 +10,8 @@ import '../05_game/game.dart';
 
 class MultiplayerScreen extends StatelessWidget {
   final String username;
-  const MultiplayerScreen({Key? key, required this.username}) : super(key: key);
+  final String lobbyCode;
+  const MultiplayerScreen({Key? key, required this.username, required this.lobbyCode}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,32 @@ class MultiplayerScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 20),
+
+              // Code display
+              lobbyCode.isNotEmpty
+                ? Column(
+                    children: [
+                      Text(
+                        "Lobby code:",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      SelectableText(
+                        lobbyCode,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  )
+                : SizedBox.shrink(),
+
               // Lobby Queue Header Text
               Center(
                 child: Text(
@@ -125,8 +151,6 @@ class MultiplayerScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50)),
               ),
-
-              
             ],
           ),
         ),
