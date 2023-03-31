@@ -11,7 +11,9 @@ import '../05_game/game.dart';
 class MultiplayerScreen extends StatelessWidget {
   final String username;
   final String lobbyCode;
-  const MultiplayerScreen({Key? key, required this.username, required this.lobbyCode}) : super(key: key);
+  const MultiplayerScreen(
+      {Key? key, required this.username, required this.lobbyCode})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,12 @@ class MultiplayerScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            // Delete the lobby before navigating back
+            await multiplayerController.deleteLobby(lobbyCode);
+            // Navigate back
+            Navigator.pop(context);
+          },
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
@@ -43,27 +50,27 @@ class MultiplayerScreen extends StatelessWidget {
 
               // Code display
               lobbyCode.isNotEmpty
-                ? Column(
-                    children: [
-                      Text(
-                        "Lobby code:",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                  ? Column(
+                      children: [
+                        Text(
+                          "Lobby code:",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      SelectableText(
-                        lobbyCode,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(height: 10),
+                        SelectableText(
+                          lobbyCode,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  )
-                : SizedBox.shrink(),
+                        SizedBox(height: 20),
+                      ],
+                    )
+                  : SizedBox.shrink(),
 
               // Lobby Queue Header Text
               Center(

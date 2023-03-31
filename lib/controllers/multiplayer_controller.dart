@@ -58,6 +58,11 @@ class MultiplayerController extends GetxController {
     });
   }
 
+  Future<void> deleteLobby(String lobbyCode) async {
+    // Remove the lobby from the Realtime Database based on the lobbyCode
+    await _lobbiesRef.child(lobbyCode).remove();
+  }
+
   String generateLobbyCode() {
     int code = Random().nextInt(90000) + 10000;
     return code.toString();
