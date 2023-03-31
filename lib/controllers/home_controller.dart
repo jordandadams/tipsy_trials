@@ -40,7 +40,6 @@ class HomeController extends GetxController {
   }
 
   void setSelectedMode(String mode) {
-    print('Setting mode to: $mode'); // Debug print
     _mode = mode;
     if (mode == 'multiplayer') {
       isSelectedMultiplayer.value = true;
