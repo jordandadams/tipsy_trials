@@ -98,47 +98,50 @@ class MultiplayerScreen extends StatelessWidget {
                   color: Colors.grey[200], // Light grey color
                   borderRadius: BorderRadius.circular(10), // Rounded corners
                 ),
-                child: Obx(
-                  () => Container(
-                    width: 400, // Set the fixed width
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: multiplayerController.usernames
-                          .map((user) => Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                        user.length > 15
-                                            ? user.substring(0, 15)
-                                            : user,
+                child: GetBuilder<MultiplayerController>(
+                  builder: (multiplayerController) {
+                    return Container(
+                      width: 400, // Set the fixed width
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: multiplayerController.usernames
+                            .map((user) => Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Text(
+                                          user.length > 15
+                                              ? user.substring(0, 15)
+                                              : user,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        // Show confirmation dialog
-                                        _showKickConfirmation(
-                                          context,
-                                          user,
-                                          () => multiplayerController.usernames
-                                              .remove(user),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () {
+// Show confirmation dialog
+                                          _showKickConfirmation(
+                                            context,
+                                            user,
+                                            () => multiplayerController
+                                                .usernames
+                                                .remove(user),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    );
+                  },
                 ),
               ),
-
               // Spacer to push the button to the bottom
               Spacer(),
 

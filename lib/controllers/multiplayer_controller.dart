@@ -14,9 +14,12 @@ class MultiplayerController extends GetxController {
 
   String? get lobbyCode => _lobbyCode;
 
+  String? username;
+
   void addUser(String username) {
     if (username.isNotEmpty) {
       usernames.add(username);
+      this.username = username;
     }
   }
 
@@ -33,6 +36,7 @@ class MultiplayerController extends GetxController {
       'players': [playerId],
     });
     _lobbyCode = lobbyCode;
+    this.username = playerId;
   }
 
   void joinLobby(String lobbyCode, String playerId) {
@@ -50,6 +54,7 @@ class MultiplayerController extends GetxController {
         playersList = playersMap.keys.cast<String>().toList();
       }
       usernames.assignAll(playersList);
+      update(); // Notify listeners about the update
     });
   }
 
@@ -68,6 +73,15 @@ class MultiplayerController extends GetxController {
         return [];
       }
     });
+  }
+
+  Future<void> removePlayerFromLobby(
+      String lobbyCode, String playerName) async {
+    await _lobbiesRef
+        .child(lobbyCode)
+        .child('players')
+        .child(playerName)
+        .remove();
   }
 
   Future<void> deleteLobby(String lobbyCode) async {

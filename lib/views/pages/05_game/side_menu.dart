@@ -2,16 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tipsy_trials/controllers/multiplayer_controller.dart';
 import 'package:tipsy_trials/views/pages/02_home/home.dart';
+import '../../../controllers/home_controller.dart';
 import '../../../controllers/local_play_controller.dart';
 
 class SideMenu extends StatelessWidget {
   final bool isMultiplayer;
   final String? lobbyCode;
-  const SideMenu({Key? key, required this.isMultiplayer, this.lobbyCode = ''}) : super(key: key);
+  final String? playerName;
+  const SideMenu(
+      {Key? key,
+      required this.isMultiplayer,
+      this.lobbyCode = '',
+      this.playerName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final localPlayController = Get.find<LocalPlayController>();
+    final homeController = Get.find<HomeController>();
     final multiplayerController = Get.find<MultiplayerController>();
 
     if (isMultiplayer && lobbyCode!.isNotEmpty) {
@@ -58,7 +66,24 @@ class SideMenu extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
               child: ElevatedButton(
-                onPressed: () => Get.to(() => HomeScreen()),
+                onPressed: () async {
+                  if (isMultiplayer) {
+                    // Remove player from the lobby
+                    await multiplayerController.removePlayerFromLobby(
+                        lobbyCode!, playerName!);
+                    // Check the number of players remaining in the lobby
+                    int remainingPlayers =
+                        multiplayerController.usernames.length;
+                    // If less than 2 players, delete the lobby
+                    if (remainingPlayers < 2) {
+                      await multiplayerController.deleteLobby(lobbyCode!);
+                    }
+                  }
+                  // Reset GetX state for the player
+                  localPlayController.resetState();
+                  Get.delete<HomeController>();
+                  Get.to(() => HomeScreen());
+                },
                 child: Text('Quit Game'),
               ),
             ),

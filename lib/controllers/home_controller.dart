@@ -40,6 +40,7 @@ class HomeController extends GetxController {
   }
 
   void setSelectedMode(String mode) {
+    print('Setting mode to: $mode'); // Debug print
     _mode = mode;
     if (mode == 'multiplayer') {
       isSelectedMultiplayer.value = true;
@@ -48,8 +49,9 @@ class HomeController extends GetxController {
       isSelectedMultiplayer.value = false;
       isSelectedLocalPlay.value = true;
     }
-    selectedMode.value = _mode; // Add this line to update the observable
+    selectedMode.value = _mode;
     validateForm(); // Update the canProceed value
+    update();
   }
 
   BorderSide focusedBorderSide() {

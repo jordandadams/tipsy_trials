@@ -121,7 +121,9 @@ class _GameScreenState extends State<GameScreen> {
       ),
       drawer: SideMenu(
           isMultiplayer: widget.isMultiplayer,
-          lobbyCode: multiplayerController.lobbyCode),
+          lobbyCode: multiplayerController.lobbyCode,
+          playerName: multiplayerController.username,
+      ),
     );
   }
 

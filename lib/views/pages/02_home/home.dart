@@ -77,22 +77,31 @@ class HomeScreen extends StatelessWidget {
 
                     SizedBox(height: 15),
 
-                    // Multiplayer button
-                    SelectionButton(
-                      text: 'Multiplayer',
-                      onPressed: () =>
-                          homeController.setSelectedMode('multiplayer'),
-                      isSelected: homeController.isSelectedMultiplayer,
-                    ),
+                    GetBuilder<HomeController>(builder: (homeController) {
+                      return Column(
+                        children: [
+                          // Multiplayer button
+                          SelectionButton(
+                            text: 'Multiplayer',
+                            onPressed: () =>
+                                homeController.setSelectedMode('multiplayer'),
+                            isSelected: homeController.isSelectedMultiplayer
+                                .value, // Pass the value directly
+                          ),
 
-                    SizedBox(height: 15),
+                          SizedBox(height: 15),
 
-                    // Local Play button
-                    SelectionButton(
-                      text: 'Local Play',
-                      onPressed: () => homeController.setSelectedMode('local'),
-                      isSelected: homeController.isSelectedLocalPlay,
-                    ),
+                          // Local Play button
+                          SelectionButton(
+                            text: 'Local Play',
+                            onPressed: () =>
+                                homeController.setSelectedMode('local'),
+                            isSelected: homeController.isSelectedLocalPlay
+                                .value, // Pass the value directly
+                          ),
+                        ],
+                      );
+                    })
                   ],
                 ),
               ),
@@ -112,8 +121,7 @@ class HomeScreen extends StatelessWidget {
                                 Get.put(MultiplayerController());
                             final username =
                                 homeController.usernameController.text;
-                            await multiplayerController
-                                .createLobby(username);
+                            await multiplayerController.createLobby(username);
                             Get.to(() => MultiplayerScreen(
                                   username: username,
                                   lobbyCode: multiplayerController.lobbyCode!,
