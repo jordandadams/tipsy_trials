@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import '../../../controllers/home_controller.dart';
 import '../../widgets/selection_button.dart';
 import '../../widgets/username_field.dart';
+import '../06_join/join.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -110,22 +111,15 @@ class HomeScreen extends StatelessWidget {
               Obx(() {
                 return ElevatedButton(
                   onPressed: homeController.canProceed.value
-                      ? () async {
+                      ? () {
                           if (homeController.selectedMode.value == 'local') {
                             Get.to(() => LocalPlayScreen(
                                 username:
                                     homeController.usernameController.text));
                           } else if (homeController.selectedMode.value ==
                               'multiplayer') {
-                            final multiplayerController =
-                                Get.put(MultiplayerController());
-                            final username =
-                                homeController.usernameController.text;
-                            await multiplayerController.createLobby(username);
-                            Get.to(() => MultiplayerScreen(
-                                  username: username,
-                                  lobbyCode: multiplayerController.lobbyCode!,
-                                ));
+                            showMultiplayerOptions(context,
+                                homeController.usernameController.text);
                           }
                         }
                       : null,
@@ -138,6 +132,42 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void showMultiplayerOptions(BuildContext context, String username) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Multiplayer Options'),
+          content: Text('Choose an option to proceed.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // User selected "Host"
+                final multiplayerController = Get.put(MultiplayerController());
+                multiplayerController.createLobby(username).then((_) {
+                  Get.to(() => MultiplayerScreen(
+                        username: username,
+                        lobbyCode: multiplayerController.lobbyCode!,
+                      ));
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Host'),
+            ),
+            TextButton(
+              onPressed: () {
+                // User selected "Join"
+                // Navigate to the Join Screen (replace 'JoinScreen' with the actual class name)
+                Get.to(() => JoinScreen(username: username));
+              },
+              child: Text('Join'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
