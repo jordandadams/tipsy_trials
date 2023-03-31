@@ -145,7 +145,7 @@ class MultiplayerScreen extends StatelessWidget {
               // LET'S PLAY button
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => GameScreen());
+                  Get.to(() => GameScreen(isMultiplayer: true));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

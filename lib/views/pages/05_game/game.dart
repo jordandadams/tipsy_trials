@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tipsy_trials/constants/app_colors.dart';
+import 'package:tipsy_trials/controllers/multiplayer_controller.dart';
 import 'package:tipsy_trials/views/pages/05_game/side_menu.dart';
 import '../../../controllers/current_questions_controller.dart';
 import '../../../controllers/questions_controller.dart';
@@ -10,8 +11,11 @@ import '../../../controllers/visible_card_controller.dart';
 
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 
+import '../../widgets/player_buttons.dart';
+
 class GameScreen extends StatefulWidget {
-  const GameScreen({Key? key}) : super(key: key);
+  final bool isMultiplayer;
+  const GameScreen({Key? key, this.isMultiplayer = false}) : super(key: key);
 
   @override
   _GameScreenState createState() => _GameScreenState();
@@ -24,7 +28,8 @@ class _GameScreenState extends State<GameScreen> {
   final VisibleCardIndexController _visibleCardIndexController =
       Get.put(VisibleCardIndexController());
 
-  final localPlayController = Get.find<LocalPlayController>();
+  final localPlayController = Get.put(LocalPlayController());
+  final multiplayerController = Get.put(MultiplayerController());
   List<String> currentQuestions = List.filled(3, '');
   List<Map<String, dynamic>> cardQuestions = [];
   int _currentVisibleCardIndex = 0;
@@ -100,12 +105,13 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 40),
-                        child: Wrap(
-                          direction: Axis.horizontal,
-                          alignment: WrapAlignment.center,
-                          // Pass the question from the currently visible card
-                          children: _buildPlayerButtons(_questionController
-                              .cardQuestions[_currentVisibleCardIndex]),
+                        child: PlayerButtons(
+                          question: _questionController
+                              .cardQuestions[_currentVisibleCardIndex],
+                          isMultiplayer: widget.isMultiplayer,
+                          multiplayerController: multiplayerController,
+                          localPlayController: localPlayController,
+                          cardController: _cardController, // Pass this argument
                         ),
                       ),
                     ],
@@ -113,63 +119,10 @@ class _GameScreenState extends State<GameScreen> {
                 ),
         ),
       ),
-      drawer: SideMenu(),
+      drawer: SideMenu(
+          isMultiplayer: widget.isMultiplayer,
+          lobbyCode: multiplayerController.lobbyCode),
     );
-  }
-
-  List<Widget> _buildPlayerButtons(Map<String, dynamic> question) {
-    return List<Widget>.generate(localPlayController.usernames.length, (index) {
-      String player = localPlayController.usernames[index];
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-        child: ElevatedButton(
-          onPressed: () {
-            // Store the question of the currently visible card
-            final currentQuestion = question;
-            Get.dialog(
-              AlertDialog(
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(currentQuestion["question"]), // Use stored question
-                    SizedBox(height: 25),
-                    Text(
-                      'Player voted: $player',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    child: Text('Next Question'),
-                    onPressed: () {
-                      Get.back();
-                      _cardController.triggerRight();
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-          child: Text(player),
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-          ),
-        ),
-      );
-    });
   }
 
   Widget _buildQuestionCard(Map<String, dynamic> question) {

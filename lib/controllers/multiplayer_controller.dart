@@ -41,6 +41,18 @@ class MultiplayerController extends GetxController {
     });
   }
 
+  void listenToPlayersInLobby(String? lobbyCode) {
+    _lobbiesRef.child(lobbyCode!).child('players').onValue.listen((event) {
+      List<String> playersList = [];
+      if (event.snapshot.value is Map<dynamic, dynamic>) {
+        Map<dynamic, dynamic> playersMap =
+            event.snapshot.value as Map<dynamic, dynamic>;
+        playersList = playersMap.keys.cast<String>().toList();
+      }
+      usernames.assignAll(playersList);
+    });
+  }
+
   Stream<List<Lobby>> listenToLobbies() {
     return _lobbiesRef.onValue.map((event) {
       Map<dynamic, dynamic>? lobbies =
