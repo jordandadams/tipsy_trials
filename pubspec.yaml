@@ -9,6 +9,7 @@ environment:
   sdk: '>=2.18.2 <3.0.0'
 
 dependencies:
+  connectivity_plus: ^3.0.3
   flutter:
     sdk: flutter
   get:

@@ -7,6 +7,7 @@ import '../../../constants/app_sizes.dart';
 import '../../../controllers/multiplayer_controller.dart';
 import '../../themes/text.dart';
 import 'package:get/get.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../../controllers/home_controller.dart';
 import '../../widgets/selection_button.dart';
 import '../../widgets/username_field.dart';
@@ -111,15 +112,38 @@ class HomeScreen extends StatelessWidget {
               Obx(() {
                 return ElevatedButton(
                   onPressed: homeController.canProceed.value
-                      ? () {
+                      ? () async {
                           if (homeController.selectedMode.value == 'local') {
                             Get.to(() => LocalPlayScreen(
                                 username:
                                     homeController.usernameController.text));
                           } else if (homeController.selectedMode.value ==
                               'multiplayer') {
-                            showMultiplayerOptions(context,
-                                homeController.usernameController.text);
+                            // Check internet connection
+                            var connectivityResult =
+                                await Connectivity().checkConnectivity();
+                            if (connectivityResult == ConnectivityResult.none) {
+                              // No internet connection
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('No Internet Connection'),
+                                  content: Text(
+                                      'Sorry, you must have an internet connection to play Multiplayer!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              // Has internet connection
+                              showMultiplayerOptions(context,
+                                  homeController.usernameController.text);
+                            }
                           }
                         }
                       : null,
