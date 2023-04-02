@@ -89,13 +89,16 @@ class LocalPlayScreen extends StatelessWidget {
                                             : user,
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        localPlayController.usernames
-                                            .remove(user);
-                                      },
-                                    ),
+                                    // Show trash icon only if the user is not the one who started the game
+                                    user != username
+                                        ? IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () {
+                                              localPlayController.usernames
+                                                  .remove(user);
+                                            },
+                                          )
+                                        : SizedBox.shrink(),
                                   ],
                                 ),
                               ))

@@ -126,19 +126,22 @@ class MultiplayerScreen extends StatelessWidget {
                                               : user,
                                         ),
                                       ),
-                                      IconButton(
-                                        icon: Icon(Icons.delete),
-                                        onPressed: () {
-// Show confirmation dialog
-                                          _showKickConfirmation(
-                                            context,
-                                            user,
-                                            () => multiplayerController
-                                                .usernames
-                                                .remove(user),
-                                          );
-                                        },
-                                      ),
+                                      // Show trash icon only if the user is not the host
+                                      user != username
+                                          ? IconButton(
+                                              icon: Icon(Icons.delete),
+                                              onPressed: () {
+                                                // Show confirmation dialog
+                                                _showKickConfirmation(
+                                                  context,
+                                                  user,
+                                                  () => multiplayerController
+                                                      .usernames
+                                                      .remove(user),
+                                                );
+                                              },
+                                            )
+                                          : SizedBox.shrink(),
                                     ],
                                   ),
                                 ))
@@ -150,7 +153,6 @@ class MultiplayerScreen extends StatelessWidget {
               ),
               // Spacer to push the button to the bottom
               Spacer(),
-
               // LET'S PLAY button
               ElevatedButton(
                 onPressed: () {
